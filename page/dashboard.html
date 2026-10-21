@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherBoard - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                fontFamily: {
+                    sans: ['Plus Jakarta Sans', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#364dff',
+                            light: '#5a6eff',
+                            dark: '#2b3ecc',
+                            gradient: '#667aff',
+                        },
+                        secondary: '#798bff',
+                        surface: '#F8F9FF',
+                        dark: {
+                            bg: '#0F172A',
+                            surface: '#1E293B',
+                            text: '#F1F5F9'
+                        },
+                        accent: {
+                            green: '#10B981',
+                            red: '#EF4444',
+                            yellow: '#F59E0B'
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(54, 77, 255, 0.25)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // Apply the saved dark / light mode before the page paints (no flash).
+        if (localStorage.getItem("weatherboard.theme") === "dark") {
+            document.documentElement.classList.add("dark");
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Checkbox Hack for Mobile Sidebar */
+        #mobile-menu-toggle:checked ~ .sidebar-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #mobile-menu-toggle:checked ~ .layout .sidebar {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-[#F8F9FF] text-slate-800 font-sans antialiased selection:bg-primary selection:text-white dark:bg-[#0F172A] dark:text-[#F1F5F9]">
+
+    <!-- Mobile Menu Toggle State -->
+    <input type="checkbox" id="mobile-menu-toggle" class="hidden">
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden" onclick="document.getElementById('mobile-menu-toggle').checked = false"></div>
+
+    <!-- Layout Container -->
+    <div class="layout flex min-h-screen relative overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="sidebar fixed lg:sticky top-0 left-0 z-50 h-screen w-[280px] -translate-x-full lg:translate-x-0 transition-transform duration-300 glass flex flex-col border-r border-slate-200 dark:border-slate-800">
+            <!-- Logo Area -->
+            <div class="h-20 flex items-center px-8 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-3">
+                    <img src="../image/logoWB.png" alt="WeatherBoard Logo" class="w-8 h-8 object-contain">
+
+                    <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-white">Weather<span class="text-primary font-extrabold">Board</span></span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+                <div class="px-4 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Main Menu</div>
+
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium transition-all group">
+                    <iconify-icon icon="solar:widget-add-linear" width="20" stroke-width="1.5"></iconify-icon>
+                    Dashboard
+                </a>
+
+                <a href="weatherDetail.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white hover:shadow-sm dark:hover:bg-slate-800 transition-all group">
+                    <i class="fa-solid fa-temperature-high group-hover:text-primary transition-colors"></i>
+                    Weather Detail
+                </a>
+
+                <a href="forecast.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white hover:shadow-sm dark:hover:bg-slate-800 transition-all group">
+                    <iconify-icon icon="solar:cloud-linear" width="20" class="group-hover:text-primary transition-colors"></iconify-icon>
+                    Forecast
+                </a>
+
+                <a href="cities.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white hover:shadow-sm dark:hover:bg-slate-800 transition-all group">
+                    <i class="fa-regular fa-building group-hover:text-primary transition-colors"></i>
+                    Cities
+                </a>
+
+                <a href="map.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white hover:shadow-sm dark:hover:bg-slate-800 transition-all group">
+                    <i class="fa-regular fa-building group-hover:text-primary transition-colors"></i>
+                    Map
+                </a>
+
+                <div class="px-4 mt-8 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">System</div>
+
+                <a href="setting.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white hover:shadow-sm dark:hover:bg-slate-800 transition-all group">
+                    <iconify-icon icon="solar:settings-linear" width="20" stroke-width="1.5" class="group-hover:text-primary transition-colors"></iconify-icon>
+                    Setting
+                </a>
+            </nav>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 w-full min-w-0 flex flex-col">
+
+            <!-- Top Header -->
+            <header class="h-20 glass sticky top-0 z-30 px-6 flex items-center justify-between border-b border-slate-200/50 dark:border-slate-800/50 transition-all">
+                <div class="flex items-center gap-4">
+                    <!-- Mobile Menu Trigger -->
+                    <label for="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+                        <iconify-icon icon="solar:hamburger-menu-linear" width="24"></iconify-icon>
+                    </label>
+
+                    <div class="hidden sm:block">
+                        <h1 class="text-xl font-semibold text-slate-800 dark:text-white tracking-tight">Dashboard</h1>
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <span>Home</span>
+                            <iconify-icon icon="solar:alt-arrow-right-linear" width="12"></iconify-icon>
+                            <span class="text-primary font-medium">Overview</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dark / light mode switch -->
+                <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors">
+                    <iconify-icon id="theme-toggle-icon" icon="solar:moon-linear" width="22"></iconify-icon>
+                </button>
+
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6 md:p-8 space-y-8 overflow-y-auto max-w-7xl mx-auto w-full">
+
+                <!-- Greeting -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Welcome to WeatherBoard ! 🌤️</h2>
+                        <p class="text-slate-500 text-sm mt-1">A quick look at today's weather and your saved cities.</p>
+                    </div>
+                </div>
+
+                <!-- Today's weather for the selected city -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card">
+                    <p id="dashboard-status" class="text-slate-500 text-sm">Loading weather…</p>
+                    <div id="dashboard-hero" class="hidden">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div class="flex items-center gap-4">
+                                <img id="dashboard-icon" alt="" class="w-20 h-20">
+                                <div>
+                                    <p id="dashboard-city" class="text-sm text-slate-500 font-medium"></p>
+                                    <h3 id="dashboard-temp" class="text-4xl font-bold text-slate-800 dark:text-white mt-1">—</h3>
+                                    <p id="dashboard-desc" class="text-slate-500 text-sm capitalize mt-1"></p>
+                                </div>
+                            </div>
+                            <div class="text-left md:text-right">
+                                <p class="text-xs text-slate-400">Feels like</p>
+                                <p id="dashboard-feels" class="text-lg font-semibold text-slate-700 dark:text-slate-200 mt-1"></p>
+                                <p id="dashboard-updated" class="text-xs text-slate-400 mt-2"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metric Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card hover:shadow-lg transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 bg-[#F8F9FF] dark:bg-primary/10 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                                <iconify-icon icon="solar:thermometer-linear" width="24"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="text-slate-500 text-sm font-medium">Temperature</p>
+                        <h3 id="metric-temp" class="text-2xl font-bold text-slate-800 dark:text-white mt-1">—</h3>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card hover:shadow-lg transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 group-hover:scale-110 transition-transform">
+                                <iconify-icon icon="solar:water-linear" width="24"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="text-slate-500 text-sm font-medium">Humidity</p>
+                        <h3 id="metric-humidity" class="text-2xl font-bold text-slate-800 dark:text-white mt-1">—</h3>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card hover:shadow-lg transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600 group-hover:scale-110 transition-transform">
+                                <iconify-icon icon="solar:wind-linear" width="24"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="text-slate-500 text-sm font-medium">Wind</p>
+                        <h3 id="metric-wind" class="text-2xl font-bold text-slate-800 dark:text-white mt-1">—</h3>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card hover:shadow-lg transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-purple-600 group-hover:scale-110 transition-transform">
+                                <iconify-icon icon="solar:cloud-linear" width="24"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="text-slate-500 text-sm font-medium">Clouds</p>
+                        <h3 id="metric-clouds" class="text-2xl font-bold text-slate-800 dark:text-white mt-1">—</h3>
+                    </div>
+                </div>
+
+                <!-- Saved Cities -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-slate-800 dark:text-white">My Saved Cities</h3>
+                        <a href="cities.html" class="text-sm text-primary font-medium hover:underline">Manage Cities</a>
+                    </div>
+                    <div id="saved-cities-list" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Our own page script (compiled from src/dashboard/dashboardPage.ts) -->
+    <script type="module" src="../dist/dashboard/dashboardPage.js"></script>
+</body>
+</html>
